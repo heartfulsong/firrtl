@@ -352,6 +352,27 @@ class CheckSpec extends AnyFlatSpec with Matchers {
     }
   }
 
+  "ExtModules with the same defname and different ports" should "throw an exception" in {
+    val input =
+      s"""|circuit Foo:
+          |  extmodule Bar:
+          |    input a: UInt<1>
+          |    defname = bar
+          |  extmodule Baz:
+          |    input a: UInt<2>
+          |    defname = bar
+          |  module Foo:
+          |    skip
+          |""".stripMargin
+    assertThrows[CheckHighForm.DefnameDifferentPortsException] {
+      try {
+        checkHighInput(input)
+      } catch {
+        case e: firrtl.passes.PassExceptions => throw e.exceptions.head
+      }
+    }
+  }
+
 }
 
 object CheckSpec {
