@@ -7,6 +7,7 @@ import firrtl.ir._
 import firrtl.Mappers._
 import firrtl.Utils._
 import firrtl.options.Dependency
+import firrtl.passes.ResolveKinds
 
 import scala.collection.mutable
 
@@ -120,7 +121,7 @@ class FlattenRegUpdate extends Transform with DependencyAPIMigration {
   override def optionalPrerequisiteOf = Seq.empty
 
   override def invalidates(a: Transform): Boolean = a match {
-    case _: DeadCodeElimination => true
+    case _: DeadCodeElimination | ResolveKinds => true
     case _ => false
   }
 
